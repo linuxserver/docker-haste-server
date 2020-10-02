@@ -1,0 +1,2 @@
+# file expiration job
+0 0 * * * find /data -type f -mtime +7 -delete \;

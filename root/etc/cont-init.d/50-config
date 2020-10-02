@@ -1,0 +1,31 @@
+#!/usr/bin/with-contenv bash
+
+mkdir -p /config \
+    /config/crontabs \
+    /data
+
+if [ ! -f "/config/config.js" ]; then
+    mv /app/haste-server/config.js /config/config.js
+    /usr/bin/node /defaults/configure.js
+fi
+
+if [ ! -f "/config/about.md" ]; then
+    mv /app/haste-server/about.md /config/about.md
+fi
+
+rm /app/haste-server/config.js > /dev/null 2>&1
+ln -s /config/config.js /app/haste-server/config.js
+
+# copy crontab if needed
+[[ ! -f /config/crontabs/abc ]] && \
+	cp /etc/crontabs/abc /config/crontabs/
+
+# import user crontabs
+rm /etc/crontabs/*
+cp /config/crontabs/* /etc/crontabs/
+
+# permissions
+chown -R abc:abc \
+	/app/haste-server \
+	/config \
+    /data
