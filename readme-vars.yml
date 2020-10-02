@@ -1,0 +1,40 @@
+---
+
+# project information
+project_name: haste-server
+project_url: "https://github.com/seejohnrun/haste-server"
+# project_logo: ""
+project_blurb: |
+  [{{ project_name|capitalize }}]({{ project_url }}) is an open-source pastebin software written in node.js, which is easily installable in any network. It can be backed by either redis or filesystem, and has a very easy adapter interface for other stores.
+project_lsio_github_repo_url: "https://github.com/linuxserver/docker-{{ project_name }}"
+
+# supported architectures
+available_architectures:
+  - { arch: "{{ arch_x86_64 }}", tag: "amd64-latest"}
+  - { arch: "{{ arch_arm64 }}", tag: "arm64v8-latest"}
+  - { arch: "{{ arch_armhf }}", tag: "arm32v7-latest"}
+
+# container parameters
+param_container_name: "{{ project_name }}"
+param_usage_include_vols: true
+param_volumes:
+  - { vol_path: "/config", vol_host_path: "<path to data on host>", desc: "config directory volume mapping" }
+  - { vol_path: "/data", vol_host_path: "<path to data on host>", desc: "data directory volume mapping" }
+param_usage_include_env: true
+param_env_vars:
+  - { env_var: "TZ", env_value: "<TZ>", desc: "Timezone (i.e., America/New_York)" }
+
+param_usage_include_ports: true
+param_ports:
+  - { external_port: "7777", internal_port: "7777", port_desc: "http gui" }
+
+# application setup block
+app_setup_block_enabled: true
+app_setup_block: |
+  Access the WebUI at <your-ip>:7777.
+
+  By default, this container is set up to use [file](https://github.com/seejohnrun/haste-server#file) storage. **Note** that haste-server doesn't support expiration of pastes when using this storage. In order to allow support for this, we have added in cron to the container to expire all pastes once per day give the specified mtime. The default here is 7 days. You can modify this expiration (or disable it) by adjusted the crontab file location at `/config/crontabs/abc`.
+
+# changelog
+changelogs:
+  - { date: "28.08.20:", desc: "Initial Release." }
